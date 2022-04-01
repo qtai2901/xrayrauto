@@ -106,14 +106,14 @@ error_detect_depends() {
 # Pre-installation settings
 pre_install_docker_compose() {
   #link web:
-read -p "link web:" ApiHost
+read -p "link web(bao gồm https://): " ApiHost
   [ -z "${ApiHost}" ] && ApiHost="0"
   echo "-------------------------------"
   echo "Link web: ${ApiHost}"
   echo "-------------------------------"
   
   #key web:
-read -p "key web:" ApiKey
+read -p "key web: " ApiKey
   [ -z "${ApiKey}" ] && ApiKey="0"
   echo "-------------------------------"
   echo "key web: ${ApiKey}"
@@ -134,12 +134,7 @@ read -p "Giới hạn thiết bị :" DeviceLimit
   echo "Thiết bị tối đa là: ${DeviceLimit}"
   echo "-------------------------------"
   
-  #CertDomain:
-#read -p "ip hoăc domain:" CertDomain
- # [ -z "${CertDomain}" ]
-  #echo "-------------------------------"
-  #echo "CertDomain: ${CertDomain}"
-  #echo "-------------------------------"
+  
   
   
 }
@@ -234,7 +229,7 @@ EOF
   sed -i "s|ApiKey:.*|ApiKey: \"${ApiKey}\"|" ./config.yml
   sed -i "s|NodeID:.*|NodeID: ${node_id}|" ./config.yml
   sed -i "s|DeviceLimit:.*|DeviceLimit: ${DeviceLimit}|" ./config.yml
- # sed -i "s|CertDomain:.*|CertDomain: \"${CertDomain}\"|" ./config.yml
+
   }
 
 # Install docker and docker compose
