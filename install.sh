@@ -9,7 +9,7 @@ red='\033[0;31m'
 green='\033[0;32m'
 #yellow='\033[0;33m'
 plain='\033[0m'
-operation=(Install Update UpdateConfig logs restart delete)
+operation=(Install stop start Update UpdateConfig logs restart delete)
 # Make sure only root can run our script
 [[ $EUID -ne 0 ]] && echo -e "[${red}Error${plain}] Chưa vào root kìa !, vui lòng xin phép ROOT trước!" && exit 1
 
@@ -105,21 +105,21 @@ error_detect_depends() {
 
 # Pre-installation settings
 pre_install_docker_compose() {
-  echo -e "[1] 4g.quoctai.xyz"
-  echo -e "[2] 4g.quoctai.xyz"
-  read -p "Web đang sử dụng:" api_host
-  if [ "$api_host" == "1" ]; then
-    api_host="https://4g.quoctai.xyz"
-  elif [ "$api_host" == "2" ]; then
-    api_host="https://4g.quoctai.xyz"
-  else 
-    api_host="https://4g.quoctai.xyz"
-  fi
+  #link web:
+read -p "link web:" ApiHost
+  [ -z "${ApiHost}" ] && ApiHost="0"
+  echo "-------------------------------"
+  echo "Link web: ${ApiHost}"
+  echo "-------------------------------"
+  
+  #key web:
+read -p "key web:" ApiKey
+  [ -z "${ApiKey}" ] && ApiKey="0"
+  echo "-------------------------------"
+  echo "key web: ${ApiKey}"
+  echo "-------------------------------"
 
-  echo "--------------------------------"
-  echo "Bạn đã chọn ${api_host}"
-  echo "--------------------------------"
-
+  
   read -p " ID nút (Node_ID):" node_id
   [ -z "${node_id}" ] && node_id=0
   echo "-------------------------------"
@@ -134,14 +134,14 @@ read -p "Giới hạn thiết bị :" DeviceLimit
   echo "Thiết bị tối đa là: ${DeviceLimit}"
   echo "-------------------------------"
   
-  
-  
   #CertDomain:
-read -p "CertDomain:" CertDomain
-  [ -z "${CertDomain}" ] && CertDomain="0"
-  echo "-------------------------------"
-  echo "CertDomain: ${CertDomain}"
-  echo "-------------------------------"
+#read -p "ip hoăc domain:" CertDomain
+ # [ -z "${CertDomain}" ]
+  #echo "-------------------------------"
+  #echo "CertDomain: ${CertDomain}"
+  #echo "-------------------------------"
+  
+  
 }
  
 
@@ -156,7 +156,7 @@ config_docker() {
 version: '3'
 services: 
   xrayr: 
-    image: crackair/xrayr:latest
+    image: Quoctai0209/xrayrr:latest
     volumes:
       - ./config.yml:/etc/XrayR/config.yml # thư mục cấu hình bản đồ
       - ./dns.json:/etc/XrayR/dns.json 
@@ -192,7 +192,7 @@ Nodes:
     PanelType: "V2board" # Panel type: SSpanel, V2board, PMpanel, Proxypanel
     ApiConfig:
       ApiHost: "https://4g.quoctai.xyz"
-      ApiKey: "phamvanquoctai0209"
+      ApiKey: "ahihichongthamhuyhoang123"
       NodeID: 41
       NodeType: V2ray # Node type: V2ray, Trojan, Shadowsocks, Shadowsocks-Plugin
       Timeout: 30 # Timeout for the api request
@@ -230,11 +230,12 @@ Nodes:
           ALICLOUD_ACCESS_KEY: aaa
           ALICLOUD_SECRET_KEY: bbb
 EOF
+  sed -i "s|ApiHost:.*|ApiHost: \"${ApiHost}\"|" ./config.yml
+  sed -i "s|ApiKey:.*|ApiKey: \"${ApiKey}\"|" ./config.yml
   sed -i "s|NodeID:.*|NodeID: ${node_id}|" ./config.yml
-  sed -i "s|ApiHost:.*|ApiHost: \"${api_host}\"|" ./config.yml
   sed -i "s|DeviceLimit:.*|DeviceLimit: ${DeviceLimit}|" ./config.yml
-  sed -i "s|CertDomain:.*|CertDomain: \"${CertDomain}\"|" ./config.yml
-}
+ # sed -i "s|CertDomain:.*|CertDomain: \"${CertDomain}\"|" ./config.yml
+  }
 
 # Install docker and docker compose
 install_docker() {
@@ -351,6 +352,18 @@ delete_xrayr() {
   rm -Rf ${cur_dir}
   echo "đã xóa thành công!"
 }
+#Stop
+stop_xrayr() {
+  cd ${cur_dir}
+  docker-compose down
+  echo "Đã dừng!"
+}
+  start_xrayr() {
+  cd ${cur_dir}
+  docker-compose up -d
+  echo "Đã Chạy!"
+  }
+
 # Install xrayr
 Install_xrayr() {
   pre_install_docker_compose
@@ -361,8 +374,8 @@ Install_xrayr() {
 # Initialization step
 clear
 while true; do
-  echo "-----XrayR -----"
-  echo "Địa chỉ dự án và tài liệu trợ giúp:  "
+  echo "-----XrayR của Tài Copy -----"
+  echo "Địa chỉ dự án và tài liệu trợ giúp: Chưa nghĩ ra  "
   echo "Vui lòng nhập một số để Thực Hiện Câu Lệnh:"
   for ((i = 1; i <= ${#operation[@]}; i++)); do
     hint="${operation[$i - 1]}"
@@ -371,7 +384,7 @@ while true; do
   read -p "Vui lòng chọn một số và nhấn Enter (Enter theo mặc định ${operation[0]}):" selected
   [ -z "${selected}" ] && selected="1"
   case "${selected}" in
-  1 | 2 | 3 | 4 | 5 | 6 | 7)
+  1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9)
     echo
     echo "Bắt Đầu : ${operation[${selected} - 1]}"
     echo
