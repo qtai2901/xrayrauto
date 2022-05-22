@@ -145,7 +145,7 @@ read -p "Giới hạn thiết bị :" DeviceLimit
 config_docker() {
   cd ${cur_dir} || exit
   echo "Bắt đầu cài đặt các gói"
-  install_dependencies
+#   install_dependencies
   echo "Tải tệp cấu hình DOCKER"
   cat >docker-compose.yml <<EOF
 version: '3'
